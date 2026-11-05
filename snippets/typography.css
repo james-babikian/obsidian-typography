@@ -1,0 +1,702 @@
+/* typography.css: finer typography for notes in the Minimal theme.
+   Old-style figures in running text (tables, code, lists and raised numbers keep lining figures), kerning and
+   ligatures, last lines without a lone word, balanced headings, quieter highlights, finer link underlines, section
+   breaks as asterisks, book tables, code sized to the text font, a phone text size, an optional small-caps first line
+   after each H2, Live Preview headings and quotes spaced like Reading view, and footnotes with
+   superior figures and hanging numbers.
+   The second part of the file holds the fonts, chosen per device in the Fonts group; the rules work
+   with any font. It also applies to PDF export.
+   Minimal Theme Settings keeps text size, line width and line height; only the opt-in phone text size overrides it.
+   Headings keep Minimal's look; this file only balances them, spaces small caps and matches their spacing.
+   Switches live in Settings -> Style Settings -> Typography. Without Style Settings, the defaults below apply:
+   every switch marked "on by default" is on, the others off. */
+
+/* @settings
+name: Typography
+id: otype
+settings:
+  -
+    id: otype-h-fonts
+    title: Fonts
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-text-desktop
+    title: Text font on computer
+    description: "Pick a font from this snippet, or keep your Appearance font."
+    type: class-select
+    allowEmpty: false
+    default: otype-text-desktop-default
+    options:
+      -
+        label: "Obsidian's text font"
+        value: otype-text-desktop-default
+      -
+        label: Alegreya
+        value: otype-text-desktop-alegreya
+  -
+    id: otype-text-mobile
+    title: Text font on phone and tablet
+    description: "Pick a font from this snippet, or keep your Appearance font."
+    type: class-select
+    allowEmpty: false
+    default: otype-text-mobile-default
+    options:
+      -
+        label: "Obsidian's text font"
+        value: otype-text-mobile-default
+      -
+        label: Alegreya
+        value: otype-text-mobile-alegreya
+  -
+    id: otype-ui-desktop
+    title: Interface font on computer
+    description: "Menus, sidebars, tabs, settings and properties."
+    type: class-select
+    allowEmpty: false
+    default: otype-ui-desktop-default
+    options:
+      -
+        label: "Obsidian's interface font"
+        value: otype-ui-desktop-default
+      -
+        label: Alegreya Sans
+        value: otype-ui-desktop-alegreya-sans
+  -
+    id: otype-ui-mobile
+    title: Interface font on phone and tablet
+    description: "Menus, sidebars, tabs, settings and properties."
+    type: class-select
+    allowEmpty: false
+    default: otype-ui-mobile-default
+    options:
+      -
+        label: "Obsidian's interface font"
+        value: otype-ui-mobile-default
+      -
+        label: Alegreya Sans
+        value: otype-ui-mobile-alegreya-sans
+  -
+    id: otype-mono-desktop
+    title: Monospace font on computer
+    description: "Code blocks and inline code."
+    type: class-select
+    allowEmpty: false
+    default: otype-mono-desktop-default
+    options:
+      -
+        label: "Obsidian's monospace font"
+        value: otype-mono-desktop-default
+      -
+        label: JetBrains Mono
+        value: otype-mono-desktop-jetbrains-mono
+      -
+        label: Quill Mono (iA Writer Mono, renamed)
+        value: otype-mono-desktop-quill-mono
+      -
+        label: Courier Prime
+        value: otype-mono-desktop-courier-prime
+  -
+    id: otype-mono-mobile
+    title: Monospace font on phone and tablet
+    description: "Code blocks and inline code."
+    type: class-select
+    allowEmpty: false
+    default: otype-mono-mobile-default
+    options:
+      -
+        label: "Obsidian's monospace font"
+        value: otype-mono-mobile-default
+      -
+        label: JetBrains Mono
+        value: otype-mono-mobile-jetbrains-mono
+      -
+        label: Quill Mono (iA Writer Mono, renamed)
+        value: otype-mono-mobile-quill-mono
+      -
+        label: Courier Prime
+        value: otype-mono-mobile-courier-prime
+  -
+    id: otype-line-width
+    title: Recommended line width
+    description: "27 rem for Alegreya (Minimal Theme Settings -> Line width). That gives about 66 characters a line at any text size."
+    type: info-text
+  -
+    id: otype-h-figures
+    title: Figures
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-oldstyle
+    title: Old-style figures
+    description: "Figures that sit in the line like lowercase letters, in running text. Tables, code and numbered lists keep lining figures."
+    type: class-toggle
+    default: true
+  -
+    id: otype-h-text
+    title: Text
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-pretty
+    title: No lone word on a last line
+    description: "The browser rebalances the last lines of a paragraph, also in Live Preview, except in the paragraph you are typing in. On the iPhone this needs iOS 26."
+    type: class-toggle
+    default: true
+  -
+    id: otype-upright
+    title: Emphasis inside italic turns upright
+    description: "Italic words inside italic text (a nested emphasis, or an italic quote or heading set in Minimal) stand upright."
+    type: class-toggle
+    default: true
+  -
+    id: otype-marker
+    title: Highlights as a marker stroke
+    description: "Highlighted text gets a band over the lower part of the letters, in Obsidian's highlight colour."
+    type: class-toggle
+    default: true
+  -
+    id: otype-historical
+    title: Historical ligatures
+    description: "Joined letters such as ct and st, in fonts that have them (Alegreya)."
+    type: class-toggle
+    default: false
+  -
+    id: otype-quote-indent
+    title: Live Preview quotes indented like Reading view
+    description: "Quote text in Live Preview starts where it does in Reading view (Minimal's quote indent), so lines break at the same words."
+    type: class-toggle
+    default: true
+  -
+    id: otype-block-spacing
+    title: Callouts and quotes spaced like paragraphs
+    description: "Minimal's paragraph spacing between callouts and quotes that follow each other, and Minimal's heading spacing above a heading after a callout, in Reading view and Live Preview alike. In Live Preview also the gap Reading view has above a quote or list written straight after a line, and below a heading with no blank line under it."
+    type: class-toggle
+    default: true
+  -
+    id: otype-lead-in
+    title: Small-caps first line after each H2
+    description: "In Reading view and Live Preview: the first line of an ordinary paragraph right after an H2."
+    type: class-toggle
+    default: false
+  -
+    id: otype-book-tables
+    title: Book tables
+    description: "Tables as in a printed book: no lines between rows or columns, a firmer line above and below the table and a thin one under the header row."
+    type: class-toggle
+    default: true
+  -
+    id: otype-h-headings
+    title: Headings and sections
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-balance
+    title: Balanced headings
+    description: "No lone word on a heading's last line."
+    type: class-toggle
+    default: true
+  -
+    id: otype-caps-spacing
+    title: Letterspacing for small-caps headings
+    description: "Adds 6 % letterspacing to heading levels set to small caps in Minimal's Style Settings."
+    type: class-toggle
+    default: true
+  -
+    id: otype-match-headings
+    title: Live Preview headings spaced like Reading view
+    description: "Live Preview uses Minimal's heading spacing above headings, and Reading view's space below large headings. Set Minimal's paragraph spacing to 1lh to match paragraphs too."
+    type: class-toggle
+    default: true
+  -
+    id: otype-asterisks
+    title: Section breaks as three asterisks
+    description: "A line of three dashes (---) is shown as * * *."
+    type: class-toggle
+    default: true
+  -
+    id: otype-h-code
+    title: Code and links
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-code-size
+    title: Code size
+    description: "Scaled to the text font's lowercase height, so code looks the same size beside any text font. Monospace letters are wide, so slightly smaller than matched reads as proportional."
+    type: class-select
+    allowEmpty: false
+    default: otype-code-size-85
+    options:
+      -
+        label: "Smaller, 85 % of the text's lowercase"
+        value: otype-code-size-85
+      -
+        label: "A touch smaller, 92 %"
+        value: otype-code-size-92
+      -
+        label: "Matched, 100 %"
+        value: otype-code-size-matched
+      -
+        label: "Minimal's own code size"
+        value: otype-code-size-minimal
+  -
+    id: otype-slashed-zero
+    title: Slashed zero in code
+    description: "In fonts that have it (JetBrains Mono, Quill Mono)."
+    type: class-toggle
+    default: true
+  -
+    id: otype-fine-underlines
+    title: Fine link underlines
+    description: "Underlines at the font's own stroke weight, a little below the letters, with gaps for g, p and y. Minimal Theme Settings still decides whether links are underlined."
+    type: class-toggle
+    default: true
+  -
+    id: otype-h-footnotes
+    title: Footnotes
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-fn-superior
+    title: Superior figures for reference numbers
+    description: "The numbers in the text that point to a footnote use the font's own small raised figures, without brackets, so the lines stay evenly spaced. In Reading view and PDF export, with Alegreya as the text font; Live Preview shows [^1] as you write."
+    type: class-toggle
+    default: true
+  -
+    id: otype-fn-lining
+    title: Lining figures in footnote labels
+    description: "Footnote labels in Live Preview stand at full height like capitals."
+    type: class-toggle
+    default: true
+  -
+    id: otype-fn-hang
+    title: Footnote numbers beside the text
+    description: "Full size, in the accent colour, in a column before the footnote's text: the list at the end of a note, and footnote lines in Live Preview. In Live Preview a named label reaches into the space before the text only where there is room; in a narrow pane it starts its line."
+    type: class-toggle
+    default: true
+  -
+    id: otype-h-phone
+    title: Phone and tablet
+    type: heading
+    level: 2
+    collapsed: true
+  -
+    id: otype-phone-size
+    title: Text size on phone and tablet
+    description: "Overrides Minimal Theme Settings' text size on the phone and tablet only."
+    type: class-select
+    allowEmpty: false
+    default: otype-phone-size-same
+    options:
+      -
+        label: Same as the computer
+        value: otype-phone-size-same
+      -
+        label: 16 px
+        value: otype-phone-size-16
+      -
+        label: 17 px
+        value: otype-phone-size-17
+      -
+        label: 18 px
+        value: otype-phone-size-18
+      -
+        label: 19 px
+        value: otype-phone-size-19
+*/
+
+/* Style Settings adds .css-settings-manager to body and then adds a class for each switch that is on. Without it,
+   ":not(.css-settings-manager)" stands in for every switch that is on by default. */
+
+/* ---------- Figures ---------- */
+
+/* Kerning and common ligatures in note text, Reading view and the editor. */
+.markdown-rendered,
+.markdown-source-view .cm-content {
+	font-kerning: normal;
+	font-variant-ligatures: common-ligatures;
+}
+
+/* Old-style figures in running text. */
+body:is(.otype-oldstyle, :not(.css-settings-manager)) :is(.markdown-rendered, .markdown-source-view .cm-content) {
+	font-variant-numeric: oldstyle-nums proportional-nums;
+}
+/* Switched off: lining figures in every font, also in Alegreya, whose own figures are old-style. */
+body.css-settings-manager:not(.otype-oldstyle) :is(.markdown-rendered, .markdown-source-view .cm-content) {
+	font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* Lining figures where columns or codes must line up, in numbered lists, and in raised numbers. */
+body :is(.markdown-rendered, .markdown-source-view .cm-content) :is(table, .cm-table-widget, code, pre, kbd,
+	.cm-inline-code, .HyperMD-codeblock, .cm-math, .math, .metadata-container, .list-number) {
+	font-variant-numeric: lining-nums tabular-nums;
+}
+body :is(.markdown-rendered, .markdown-source-view .cm-content) ol > li::marker {
+	font-variant-numeric: lining-nums tabular-nums;
+}
+body:is(.otype-slashed-zero, :not(.css-settings-manager)) :is(.markdown-rendered, .markdown-source-view .cm-content) :is(code, pre, kbd,
+	.cm-inline-code, .HyperMD-codeblock) {
+	font-variant-numeric: lining-nums tabular-nums slashed-zero;
+}
+body :is(.markdown-rendered, .markdown-source-view .cm-content) :is(sup, sub) {
+	font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* ---------- Text ---------- */
+
+/* No lone word on a paragraph's last line. A Live Preview paragraph is one .cm-line. */
+body:is(.otype-pretty, :not(.css-settings-manager)) :is(.markdown-rendered p, .markdown-rendered li, .markdown-source-view .cm-line) {
+	text-wrap: pretty;
+}
+/* The editor keeps every typed space (break-spaces), and the browser then skips text-wrap: pretty. Spaces kept the
+   normal way let it work, except on the line with the cursor, so words do not jump while typing. */
+body:is(.otype-pretty, :not(.css-settings-manager)) .markdown-source-view .cm-line:not(.cm-active) {
+	white-space: pre-wrap;
+}
+
+/* Emphasis inside italic turns upright: nested emphasis, and emphasis in quotes or headings that Minimal sets in
+   italic. Style queries read Minimal's own variables (Chromium 111+, Safari 18+). */
+body:is(.otype-upright, :not(.css-settings-manager)) .markdown-rendered :is(em, i) :is(em, i) {
+	font-style: normal;
+}
+@container style(--blockquote-font-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered blockquote, .markdown-source-view .HyperMD-quote) :is(em, i, .cm-em) {
+		font-style: normal;
+	}
+}
+@container style(--h1-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h1, .markdown-source-view .HyperMD-header-1) :is(em, i, .cm-em) { font-style: normal; }
+}
+@container style(--h2-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h2, .markdown-source-view .HyperMD-header-2) :is(em, i, .cm-em) { font-style: normal; }
+}
+@container style(--h3-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h3, .markdown-source-view .HyperMD-header-3) :is(em, i, .cm-em) { font-style: normal; }
+}
+@container style(--h4-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h4, .markdown-source-view .HyperMD-header-4) :is(em, i, .cm-em) { font-style: normal; }
+}
+@container style(--h5-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h5, .markdown-source-view .HyperMD-header-5) :is(em, i, .cm-em) { font-style: normal; }
+}
+@container style(--h6-style: italic) {
+	body:is(.otype-upright, :not(.css-settings-manager)) :is(.markdown-rendered h6, .markdown-source-view .HyperMD-header-6) :is(em, i, .cm-em) { font-style: normal; }
+}
+
+/* Highlights as a marker stroke over the lower part of the letters, in Obsidian's own highlight colour. */
+body:is(.otype-marker, :not(.css-settings-manager)) :is(.markdown-rendered mark, .markdown-source-view .cm-highlight) {
+	background-color: transparent;
+	background-image: linear-gradient(to bottom, transparent 52%, var(--text-highlight-bg) 52%, var(--text-highlight-bg) 92%, transparent 92%);
+	padding-inline: 0.08em;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+/* Historical ligatures: joined letters only. A long s (a different feature in some fonts) stays off. */
+body.otype-historical :is(.markdown-rendered, .markdown-source-view .cm-content) {
+	font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;
+}
+body.otype-historical :is(.markdown-rendered, .markdown-source-view .cm-content) :is(code, pre, kbd, .cm-inline-code, .HyperMD-codeblock) {
+	font-variant-ligatures: none;
+}
+
+/* Small-caps first line of the paragraph right after an H2. Letterspacing 6 % (Butterick: 5-12 % for small caps).
+   In Live Preview: an ordinary line (no HyperMD- class: not a list, quote, code or footnote line) after the H2 line,
+   straight after it or after one blank line; a Live Preview line is the whole paragraph. */
+body.otype-lead-in :is(.markdown-rendered .el-h2 + .el-p > p:first-child,
+	.markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line:has(> br:only-child) + .cm-line:not([class*="HyperMD-"], .hr),
+	.markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line:not([class*="HyperMD-"], .hr, :has(> br:only-child)))::first-line {
+	font-variant-caps: small-caps;
+	letter-spacing: 0.06em;
+	font-synthesis: none;
+}
+
+/* Book tables: no lines between rows or columns; a firmer line above and below the table, a thin one under the
+   header row. Reading view, and Live Preview where the table is drawn the same way. */
+body:is(.otype-book-tables, :not(.css-settings-manager)) .markdown-rendered table {
+	border-collapse: collapse;
+	border-top: 2px solid var(--text-normal);
+	border-bottom: 2px solid var(--text-normal);
+}
+body:is(.otype-book-tables, :not(.css-settings-manager)) .markdown-rendered :is(th, td) {
+	border: 0;
+	background: transparent;
+	padding-block: 0.3em;
+}
+body:is(.otype-book-tables, :not(.css-settings-manager)) .markdown-rendered thead th {
+	border-bottom: 1px solid var(--text-muted);
+}
+body:is(.otype-book-tables, :not(.css-settings-manager)) .markdown-rendered tr {
+	background: transparent;
+}
+
+/* ---------- Block quotes ---------- */
+
+/* The quote indent: Reading view puts the text after the bar (Obsidian's --blockquote-border-thickness, 0 when the
+   owner hides it) and Minimal's padding (--nested-padding, 1.1em; Obsidian's own is --size-4-6). */
+body {
+	--otype-quote-indent: calc(var(--blockquote-border-thickness, 1px) + var(--nested-padding, var(--size-4-6)));
+}
+
+/* Live Preview quotes indented like Reading view. Obsidian measures where the text after "> " starts and
+   hangs wrapped lines there, so widening each "> " to the indent moves both. On a nested line without the cursor,
+   the inner level's bar is a widget holding ">", followed by a span holding only the space: the widget takes the
+   indent and the space goes. With the cursor on the line, each level is a plain "> " span and takes the indent. */
+body:is(.otype-quote-indent, :not(.css-settings-manager)) .markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote > :is(.cm-formatting-quote, .cm-blockquote-border) {
+	display: inline-block;
+	min-width: var(--otype-quote-indent);
+	text-indent: 0;
+}
+body:is(.otype-quote-indent, :not(.css-settings-manager)) .markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote > .cm-blockquote-border ~ .cm-formatting-quote {
+	min-width: 0;
+	font-size: 0;
+}
+
+/* Callouts and quotes spaced like paragraphs. Reading view gives them a 1em margin, so two of them meet
+   closer than a paragraph and a block; Live Preview always has a blank line. Live Preview's own callouts are widgets
+   inside .markdown-rendered and keep their zero margin. */
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-rendered :is(.callout, blockquote):not(.markdown-source-view *) {
+	margin-block: var(--p-spacing);
+}
+/* A heading after a callout gets Minimal's heading spacing, as after text: Obsidian's own rule leaves callouts out.
+   In Live Preview the blank line between them closes up and the heading's padding (Headings and sections) gives the spacing. */
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-rendered div:has(> .callout) + div > :is(h1, h2, h3, h4, h5, h6):not(.markdown-source-view *) {
+	margin-top: var(--heading-spacing);
+}
+body:is(.otype-block-spacing, :not(.css-settings-manager)):is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .cm-embed-block.cm-callout + .cm-line:has(> br:only-child):has(+ .HyperMD-header) {
+	line-height: 0;
+}
+/* A block written without a blank line before it. Reading view still gives a quote or list the paragraph gap
+   after a line of another kind, and a line under a heading the heading's gap (the paragraph spacing measured in the
+   heading's own lines when it is 1lh); Live Preview shows only the blank lines in the note, and Obsidian's own rule
+   gives a line under a heading --p-spacing-empty. The quote bar starts below the gap. */
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .cm-line:not(.HyperMD-quote, [class*="HyperMD-list-line"], .HyperMD-header, :has(> br:only-child)) + .cm-line:is(.HyperMD-quote, .HyperMD-list-line) {
+	--otype-tight-gap: var(--p-spacing);
+	padding-top: var(--otype-tight-gap);
+}
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-1 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h1-size) * var(--h1-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h2-size) * var(--h2-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-3 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h3-size) * var(--h3-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-4 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h4-size) * var(--h4-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-5 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h5-size) * var(--h5-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-6 + .cm-line:not(.HyperMD-header, :has(> br:only-child)) { --otype-tight-gap: max(var(--p-spacing), calc(var(--h6-size) * var(--h6-line-height))); padding-top: var(--otype-tight-gap); }
+body:is(.otype-block-spacing, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-quote::before {
+	top: var(--otype-tight-gap, 0px);
+}
+
+/* ---------- Headings and sections ---------- */
+
+body:is(.otype-balance, :not(.css-settings-manager)) :is(.markdown-rendered :is(h1, h2, h3, h4, h5, h6), .markdown-source-view .HyperMD-header, .inline-title) {
+	text-wrap: balance;
+}
+
+/* Letterspacing for heading levels that Minimal's Style Settings sets to small caps. */
+@container style(--h1-variant: small-caps) or style(--h1-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h1, .markdown-source-view .HyperMD-header-1) { letter-spacing: 0.06em; }
+}
+@container style(--h2-variant: small-caps) or style(--h2-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h2, .markdown-source-view .HyperMD-header-2) { letter-spacing: 0.06em; }
+}
+@container style(--h3-variant: small-caps) or style(--h3-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h3, .markdown-source-view .HyperMD-header-3) { letter-spacing: 0.06em; }
+}
+@container style(--h4-variant: small-caps) or style(--h4-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h4, .markdown-source-view .HyperMD-header-4) { letter-spacing: 0.06em; }
+}
+@container style(--h5-variant: small-caps) or style(--h5-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h5, .markdown-source-view .HyperMD-header-5) { letter-spacing: 0.06em; }
+}
+@container style(--h6-variant: small-caps) or style(--h6-variant: all-small-caps) {
+	body:is(.otype-caps-spacing, :not(.css-settings-manager)) :is(.markdown-rendered h6, .markdown-source-view .HyperMD-header-6) { letter-spacing: 0.06em; }
+}
+
+/* Live Preview headings spaced like Reading view: the space above a heading that follows text is Minimal's heading
+   spacing, as in Reading view, instead of a blank line plus padding. A heading straight after another heading keeps
+   Obsidian's own smaller gap in both views. Reads the theme's value, never writes it. */
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .cm-line:not(.HyperMD-header) + .cm-line:has(> br:only-child):has(+ .HyperMD-header) {
+	line-height: 0;
+}
+/* Below a heading, Reading view keeps the paragraph spacing measured in the heading's own lines when it is 1lh, so
+   more than one text line under H1 to H3; the blank line after such a heading grows by the difference. */
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-1 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h1-size) * var(--h1-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h2-size) * var(--h2-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-3 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h3-size) * var(--h3-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-4 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h4-size) * var(--h4-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-5 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h5-size) * var(--h5-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header-6 + .cm-line:has(> br:only-child) { padding-top: max(0px, calc(var(--h6-size) * var(--h6-line-height) - 1lh)); }
+body:is(.otype-match-headings, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-content > .HyperMD-header:not(:first-child) {
+	padding-top: var(--heading-spacing);
+}
+
+/* Section breaks as three spaced asterisks, in Reading view and Live Preview; the footnote list's own rule stays. */
+body:is(.otype-asterisks, :not(.css-settings-manager)) :is(.markdown-rendered .el-hr > hr, .markdown-source-view .hr.cm-line > hr) {
+	border: none;
+	height: auto;
+	overflow: visible;
+	text-align: center;
+	line-height: 1;
+}
+body:is(.otype-asterisks, :not(.css-settings-manager)) :is(.markdown-rendered .el-hr > hr, .markdown-source-view .hr.cm-line > hr)::before {
+	content: '*\2002*\2002*';
+	color: var(--text-muted);
+	letter-spacing: 0.2em;
+}
+
+/* ---------- Footnotes ---------- */
+
+/* Obsidian's own footnotes: the reference numbers in the text, the list at the end of a note and the footnote lines in
+   Live Preview. Colours are set on the elements that use them, never on body. */
+
+/* Lining figures in footnote labels in Live Preview. Raised numbers in Reading view already have them (the sup rule
+   under Figures). */
+body:is(.otype-fn-lining, :not(.css-settings-manager)) .markdown-source-view :is(.cm-footref, .HyperMD-footnote .cm-hmd-footnote) {
+	font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* Superior figures: a reference number in Reading view and PDF export is drawn with the font's own superior
+   figures, on the baseline and at the text size, so its line keeps its height; the brackets Obsidian writes around it
+   go. The link text is hidden (size 0) and the number comes back from the link's data-footref. Only where this
+   snippet's Alegreya is the text font: Obsidian's own fonts have no superior figures. */
+body:is(.otype-fn-superior, :not(.css-settings-manager)):is(:not(.is-mobile).otype-text-desktop-alegreya, .is-mobile.otype-text-mobile-alegreya) .markdown-rendered sup.footnote-ref {
+	font-size: inherit;
+	line-height: inherit;
+	vertical-align: baseline;
+}
+body:is(.otype-fn-superior, :not(.css-settings-manager)):is(:not(.is-mobile).otype-text-desktop-alegreya, .is-mobile.otype-text-mobile-alegreya) .markdown-rendered sup.footnote-ref > a.footnote-link[data-footref] {
+	font-size: 0;
+	text-decoration: none;
+}
+body:is(.otype-fn-superior, :not(.css-settings-manager)):is(:not(.is-mobile).otype-text-desktop-alegreya, .is-mobile.otype-text-mobile-alegreya) .markdown-rendered sup.footnote-ref > a.footnote-link[data-footref]::before {
+	content: attr(data-footref);
+	font-size: var(--font-text-size, 1rem);
+	font-variant-numeric: normal;
+	font-feature-settings: 'sups' 1;
+	letter-spacing: 0;
+	margin-inline-start: 0.04em;
+}
+
+/* Footnote numbers beside the text: full size, accent colour, lining figures, right-aligned in a column wide
+   enough for two digits before the text, so the text starts at the same place for 9, 10 and 11. */
+/* The end-of-note list, also in PDF export: the number and a space, no full stop, in a
+   start padding that holds two digits. Only the list's own numbers, not a numbered list inside a footnote. The number is
+   drawn by a ::before with the snippet's own counter, not by ::marker: the iPhone (WebKit) ignores `content` on ::marker
+   and would keep the full stop. */
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol {
+	padding-inline-start: calc(2ch + 0.15em + 0.5em);
+	counter-reset: otype-fn;
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol > li {
+	list-style: none;
+	position: relative;
+	counter-increment: otype-fn;
+}
+/* Right-aligned, an en space (0.5em) before the text, so 9, 10 and 11 end at the same place. A footnote's text starts
+   with a paragraph: the number opens that paragraph and hangs into the padding, on its first line's baseline as a list
+   number would be (also beside an image or a formula). Any other start: the number hangs at the item's top. */
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol > li > p:first-child::before,
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol > li:not(:has(> p:first-child))::before {
+	content: counter(otype-fn);
+	color: var(--text-accent);
+	font-variant-numeric: lining-nums tabular-nums;
+	white-space: nowrap;
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol > li > p:first-child::before {
+	display: inline-block;
+	min-width: calc(2ch + 0.15em);
+	margin-inline: calc(-1 * (2ch + 0.15em + 0.5em)) 0.5em;
+	text-align: end;
+	text-indent: 0;
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-rendered section.footnotes > ol > li:not(:has(> p:first-child))::before {
+	position: absolute;
+	inset-inline-end: 100%;
+	margin-inline-end: 0.5em;
+}
+/* Live Preview definition lines ([^1]: …): the label, which Obsidian shows small and raised, stands full size on the
+   baseline in the number column. A longer named label reaches further towards the start, but only as far as
+   the space before the line goes; in a narrow pane or on the phone it starts its line and its text follows.
+   While the cursor is on the label, Obsidian shows the brackets and the label flows with them; with the cursor
+   elsewhere on the line it keeps its column. */
+/* The measure for that space: the editor's scroll box as an inline-size container, so 100cqw is its width without the
+   scrollbar (and inside Obsidian's own page margins, which are padding there). */
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-source-view.mod-cm6.is-live-preview .cm-scroller {
+	container: otype-pane / inline-size;
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-line.HyperMD-footnote {
+	--otype-fn-lp-pad: calc(2ch + 0.15em + 0.5em);
+	padding-inline-start: var(--otype-fn-lp-pad);
+	text-indent: calc(-1 * var(--otype-fn-lp-pad));
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-line.HyperMD-footnote:not(:has(> .cm-formatting.cm-hmd-footnote)) .cm-hmd-footnote:not(.cm-formatting) {
+	/* The room before the line: half of what the scroll box has beyond the line, which is centred in it (100% is the
+	   line's text width here), less 2em kept clear at the pane's edge (Minimal puts its page margin inside that box);
+	   never below 0. */
+	--otype-fn-lp-room: max(0px, (100cqw - 100% - var(--otype-fn-lp-pad)) / 2 - 2em);
+	/* Reversed order, packed from the end: the name ends flush where the text begins, and anything after it inside the
+	   label goes to the far side, as in the earlier right-to-left box. Works in right-to-left notes too. */
+	display: inline-flex;
+	flex-direction: row-reverse;
+	justify-content: flex-start;
+	/* The box starts the room's width before the number column and ends where the text begins; the label sits at its
+	   end. A label longer than the box widens it towards the end, so the text moves along instead of the label leaving
+	   the pane. */
+	min-width: calc(2ch + 0.15em + var(--otype-fn-lp-room));
+	/* The text after the label starts with the space typed after the colon (about 0.25em), so the column starts 0.25em
+	   in and the text of the first line lines up with the lines below it. */
+	margin-inline: calc(0.25em - var(--otype-fn-lp-room)) 0;
+	text-indent: 0;
+	white-space: nowrap;
+}
+body:is(.otype-fn-hang, :not(.css-settings-manager)) .markdown-source-view.is-live-preview .cm-line.HyperMD-footnote :is(.cm-hmd-footnote:not(.cm-formatting), .cm-hmd-footnote:not(.cm-formatting) *) {
+	font-size: 1em;
+	line-height: inherit;
+	vertical-align: baseline;
+	position: static;
+	color: var(--text-accent);
+	font-variant-numeric: lining-nums tabular-nums;
+	text-decoration: none;
+}
+
+/* Small-caps first line: no letterspacing on a reference number in it; it added space after the number. */
+body.otype-lead-in :is(.markdown-rendered .el-h2 + .el-p > p:first-child sup,
+	.markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line:has(> br:only-child) + .cm-line .cm-footref,
+	.markdown-source-view.is-live-preview .cm-content > .HyperMD-header-2 + .cm-line .cm-footref) {
+	letter-spacing: 0;
+}
+
+/* ---------- Code and links ---------- */
+
+/* Code size: code at the text size, scaled so its x-height is a share (85 %, 92 % or 100 %) of the text font's. The
+   font snippet sets --otype-text-aspect for its fonts; 0.5 suits most system fonts. "Minimal's own" leaves code alone. */
+body { --otype-code-scale: 0.85; }
+body.otype-code-size-92 { --otype-code-scale: 0.92; }
+body.otype-code-size-matched { --otype-code-scale: 1; }
+body:is(.otype-code-size-85, .otype-code-size-92, .otype-code-size-matched, :not(.css-settings-manager)) :is(.markdown-rendered :is(code, pre), .markdown-source-view :is(.cm-inline-code, .HyperMD-codeblock)) {
+	font-size: 1em;
+	font-size-adjust: ex-height calc(var(--otype-text-aspect, 0.5) * var(--otype-code-scale));
+}
+body:is(.otype-code-size-85, .otype-code-size-92, .otype-code-size-matched, :not(.css-settings-manager)) .markdown-rendered pre code {
+	font-size: 1em;
+}
+
+/* Fine link underlines: the font's own stroke weight, set a little lower, skipping descenders. */
+body:is(.otype-fine-underlines, :not(.css-settings-manager)) :is(.markdown-rendered a, .markdown-source-view :is(.cm-hmd-internal-link, .cm-link, .cm-url, .external-link, .internal-link)) {
+	text-decoration-thickness: from-font;
+	text-underline-offset: 0.18em;
+	text-decoration-skip-ink: auto;
+}
+
+/* ---------- Phone and tablet ---------- */
+
+/* Obsidian writes --font-text-size inline on body from the text size setting, which syncs; only !important beats an
+   inline value. Applies only in the phone and tablet app (.is-mobile) and only when chosen. */
+body.is-mobile.otype-phone-size-16 { --font-text-size: 16px !important; }
+body.is-mobile.otype-phone-size-17 { --font-text-size: 17px !important; }
+body.is-mobile.otype-phone-size-18 { --font-text-size: 18px !important; }
+body.is-mobile.otype-phone-size-19 { --font-text-size: 19px !important; }
